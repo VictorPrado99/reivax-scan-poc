@@ -9,6 +9,14 @@ type CodeScanner interface {
 	Run() error
 }
 
+type DefaultCodeScanner struct {
+	ScannerName string
+}
+
+func (dcs DefaultCodeScanner) GetName() string {
+	return dcs.ScannerName
+}
+
 type ScanManager struct {
 	scanners []CodeScanner
 }

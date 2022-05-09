@@ -10,12 +10,17 @@ const (
 
 func init() {
 	var sInjectionScanner CodeScanner
-	sInjectionScanner = &SqlInjection{}
+	sInjectionScanner = &SqlInjection{
+		DefaultCodeScanner{
+			SqlInjectionName,
+		},
+	}
 
 	GetInstance().AddScan(&sInjectionScanner)
 }
 
 type SqlInjection struct {
+	DefaultCodeScanner
 }
 
 func (s SqlInjection) Run() error {

@@ -10,12 +10,17 @@ const (
 
 func init() {
 	var sensitiveScanner CodeScanner
-	sensitiveScanner = &SensitiveDataExposure{}
+	sensitiveScanner = &SensitiveDataExposure{
+		DefaultCodeScanner{
+			SensitiveDataExposureName,
+		},
+	}
 
 	GetInstance().AddScan(&sensitiveScanner)
 }
 
 type SensitiveDataExposure struct {
+	DefaultCodeScanner
 }
 
 func (s SensitiveDataExposure) Run() error {
