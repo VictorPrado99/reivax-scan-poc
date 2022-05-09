@@ -17,40 +17,29 @@ package cmd
 
 import (
 	"fmt"
-	"sync"
 
-	"github.com/VictorPrado99/reivax-scan-poc/scan"
+	StaticScan "github.com/VictorPrado99/reivax-scan-poc/code_scanner"
 	"github.com/spf13/cobra"
 )
 
 // scanCmd represents the scan command
 var scanCmd = &cobra.Command{
 	Use:   "scan",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Scan your file for static vulnerabilities",
+	Long:  `Scan you files looking for static vulnerabilities.`,
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("scan called")
-		scanManager := scan.GetInstance()
-		wg := sync.WaitGroup{}
-		for _, codeScanner := range scanManager.GetScanners() {
-			wg.Add(1)
-			go func(codeScanner scan.CodeScanner) {
-				defer wg.Done()
-				fmt.Println("Running " + codeScanner.GetName())
-				codeScanner.Run()
-			}(codeScanner)
-		}
-		wg.Wait()
+		scanManager := StaticScan.GetInstance()
+
+		scanManager.RunScanners()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(scanCmd)
+
+	// scanCmd.Flags()
 
 	// Here you will define your flags and configuration settings.
 

@@ -1,4 +1,4 @@
-package scan
+package code_scanner
 
 import (
 	"fmt"
