@@ -9,14 +9,14 @@ const (
 )
 
 func init() {
-	var sensitiveScanner CodeScanner
-	sensitiveScanner = &SensitiveDataExposure{
+	var codeScanner CodeScanner
+	codeScanner = &SensitiveDataExposure{
 		DefaultCodeScanner{
 			SensitiveDataExposureName,
 		},
 	}
 
-	GetInstance().AddScan(&sensitiveScanner)
+	GetInstance().AddScan(&codeScanner)
 }
 
 type SensitiveDataExposure struct {

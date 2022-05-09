@@ -13,7 +13,7 @@ type DefaultCodeScanner struct {
 	ScannerName string
 }
 
-func (dcs DefaultCodeScanner) GetName() string {
+func (dcs *DefaultCodeScanner) GetName() string {
 	return dcs.ScannerName
 }
 

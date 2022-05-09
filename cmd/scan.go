@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/VictorPrado99/reivax-scan-poc/scan"
 	"github.com/spf13/cobra"
@@ -35,10 +36,16 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("scan called")
 		scanManager := scan.GetInstance()
-		for _, element := range scanManager.GetScanners() {
-			fmt.Println("Running " + element.GetName())
-			element.Run()
+		wg := sync.WaitGroup{}
+		for _, codeScanner := range scanManager.GetScanners() {
+			wg.Add(1)
+			go func(codeScanner scan.CodeScanner) {
+				defer wg.Done()
+				fmt.Println("Running " + codeScanner.GetName())
+				codeScanner.Run()
+			}(codeScanner)
 		}
+		wg.Wait()
 	},
 }
 
