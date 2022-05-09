@@ -27,7 +27,3 @@ func (s SensitiveDataExposure) Run() error {
 	fmt.Println("Not Implemented")
 	return nil
 }
-
-func (s SensitiveDataExposure) GetName() string {
-	return SensitiveDataExposureName
-}

@@ -27,7 +27,3 @@ func (s SqlInjection) Run() error {
 	fmt.Println("Not Implemented")
 	return nil
 }
-
-func (s SqlInjection) GetName() string {
-	return SqlInjectionName
-}
