@@ -39,14 +39,9 @@ var scanCmd = &cobra.Command{
 
 		files := util.GetFiles(directory, libRegEx)
 
-		scanManager.RunScanners(files)
+		outputManager := scanManager.RunScanners(files)
 
-		// if err != nil {
-		// 	fmt.Println("Not a directory")
-		// } else {
-		// 	fmt.Println(files)
-		// 	scanManager.RunScanners()
-		// }
+		outputManager.GenerateOutput()
 	},
 }
 

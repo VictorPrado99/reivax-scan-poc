@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"io/fs"
 	"sync"
+
+	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
 )
 
 type CodeScanner interface {
 	GetName() string
-	Run()
+	Run(outputManager *analysis_output.OutputManager)
 }
 
 type DefaultCodeScanner struct {
@@ -31,7 +33,8 @@ func (manager *ScanManager) GetScanners() []CodeScanner {
 	return manager.scanners
 }
 
-func (manager *ScanManager) RunScanners(files *[]fs.FileInfo) {
+func (manager *ScanManager) RunScanners(files *[]fs.FileInfo) *analysis_output.OutputManager {
+	outputManager := analysis_output.OutputManager{}
 
 	wg := sync.WaitGroup{}
 	for _, codeScanner := range manager.GetScanners() {
@@ -39,10 +42,11 @@ func (manager *ScanManager) RunScanners(files *[]fs.FileInfo) {
 		go func(codeScanner CodeScanner) {
 			defer wg.Done()
 			fmt.Println("Running " + codeScanner.GetName())
-			codeScanner.Run()
+			codeScanner.Run(&outputManager)
 		}(codeScanner)
 	}
 	wg.Wait()
+	return &outputManager
 }
 
 var singletonInstance *ScanManager

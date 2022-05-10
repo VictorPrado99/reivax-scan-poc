@@ -17,14 +17,18 @@ func (dof *DefaultOutputFormat) GetOutputType() string {
 	return dof.outputType
 }
 
-var outputsTypes []OutputFormatInterface
+var outputsTypes map[string]OutputFormatInterface
 
 func AddOutputType(outputType OutputFormatInterface) {
-	outputsTypes = append(outputsTypes, outputType)
+	if outputsTypes == nil {
+		outputsTypes = make(map[string]OutputFormatInterface)
+	}
+
+	outputsTypes[outputType.GetOutputType()] = outputType
 }
 
-func GetOutputTypes() []OutputFormatInterface {
-	return outputsTypes
+func GetOutputType(outputType string) OutputFormatInterface {
+	return outputsTypes[outputType]
 }
 
 type StaticAnalysisOutput interface {
@@ -43,4 +47,10 @@ func (o *OutputManager) AddAnalysedDataGroup(analysedDataGroup []StaticAnalysisO
 	defer o.lock.Unlock()
 
 	o.analysedData = append(o.analysedData, analysedDataGroup...)
+}
+
+func (o *OutputManager) GenerateOutput(outputTypes ...string) {
+	for _, outputType := range outputTypes {
+		GetOutputType(outputType).GenerateOutput()
+	}
 }

@@ -9,7 +9,7 @@ type JsonAnalysisOutput struct {
 }
 
 func (o *JsonAnalysisOutput) GenerateOutput() {
-	println(jsonType + " generate")
+	println(o.GetOutputType() + " generate")
 }
 
 func init() {

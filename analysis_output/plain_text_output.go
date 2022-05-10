@@ -9,7 +9,7 @@ type PlainTextAnalysisOutput struct {
 }
 
 func (o *PlainTextAnalysisOutput) GenerateOutput() {
-
+	println(o.GetOutputType() + " generate")
 }
 
 func init() {
