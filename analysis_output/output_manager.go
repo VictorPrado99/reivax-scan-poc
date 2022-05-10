@@ -4,6 +4,10 @@ import (
 	"sync"
 )
 
+const (
+	DefaultOutputFormatType = "plain"
+)
+
 type OutputFormatInterface interface {
 	GenerateOutput()
 	GetOutputType() string
@@ -52,5 +56,9 @@ func (o *OutputManager) AddAnalysedDataGroup(analysedDataGroup []StaticAnalysisO
 func (o *OutputManager) GenerateOutput(outputTypes ...string) {
 	for _, outputType := range outputTypes {
 		GetOutputType(outputType).GenerateOutput()
+	}
+
+	if len(outputsTypes) == 0 {
+		GetOutputType(DefaultOutputFormatType).GenerateOutput()
 	}
 }

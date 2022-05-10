@@ -1,13 +1,13 @@
 package code_scanner
 
 import (
-	"fmt"
+	"io/fs"
 
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
 )
 
 const (
-	CrossSiteScriptingName = "CrossSiteScripting"
+	CrossSiteScriptingName = "Cross Site Scripting"
 )
 
 func init() {
@@ -25,6 +25,6 @@ type CrossSiteScripting struct {
 	DefaultCodeScanner
 }
 
-func (c CrossSiteScripting) Run(outputManager *analysis_output.OutputManager) {
-	fmt.Println("Not Implemented")
+func (c CrossSiteScripting) Run(files *[]fs.File, outputManager *analysis_output.OutputManager) {
+
 }

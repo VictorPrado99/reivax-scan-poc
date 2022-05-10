@@ -41,7 +41,7 @@ var scanCmd = &cobra.Command{
 
 		outputManager := scanManager.RunScanners(files)
 
-		outputManager.GenerateOutput()
+		outputManager.GenerateOutput("json", "plain")
 	},
 }
 

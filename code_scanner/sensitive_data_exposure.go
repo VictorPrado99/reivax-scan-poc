@@ -1,13 +1,13 @@
 package code_scanner
 
 import (
-	"fmt"
+	"io/fs"
 
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
 )
 
 const (
-	SensitiveDataExposureName = "SensitiveDataExposure"
+	SensitiveDataExposureName = "Sensitive Data Exposure"
 )
 
 func init() {
@@ -25,6 +25,6 @@ type SensitiveDataExposure struct {
 	DefaultCodeScanner
 }
 
-func (s SensitiveDataExposure) Run(outputManager *analysis_output.OutputManager) {
-	fmt.Println("Not Implemented")
+func (s SensitiveDataExposure) Run(files *[]fs.File, outputManager *analysis_output.OutputManager) {
+
 }

@@ -10,7 +10,7 @@ import (
 
 type CodeScanner interface {
 	GetName() string
-	Run(outputManager *analysis_output.OutputManager)
+	Run(files *[]fs.File, outputManager *analysis_output.OutputManager)
 }
 
 type DefaultCodeScanner struct {
@@ -33,7 +33,7 @@ func (manager *ScanManager) GetScanners() []CodeScanner {
 	return manager.scanners
 }
 
-func (manager *ScanManager) RunScanners(files *[]fs.FileInfo) *analysis_output.OutputManager {
+func (manager *ScanManager) RunScanners(files *[]fs.File) *analysis_output.OutputManager {
 	outputManager := analysis_output.OutputManager{}
 
 	wg := sync.WaitGroup{}
@@ -42,7 +42,7 @@ func (manager *ScanManager) RunScanners(files *[]fs.FileInfo) *analysis_output.O
 		go func(codeScanner CodeScanner) {
 			defer wg.Done()
 			fmt.Println("Running " + codeScanner.GetName())
-			codeScanner.Run(&outputManager)
+			codeScanner.Run(files, &outputManager)
 		}(codeScanner)
 	}
 	wg.Wait()

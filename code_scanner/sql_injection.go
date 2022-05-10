@@ -1,13 +1,13 @@
 package code_scanner
 
 import (
-	"fmt"
+	"io/fs"
 
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
 )
 
 const (
-	SqlInjectionName = "SqlInjection"
+	SqlInjectionName = "Sql Injection"
 )
 
 func init() {
@@ -25,6 +25,6 @@ type SqlInjection struct {
 	DefaultCodeScanner
 }
 
-func (s SqlInjection) Run(outputManager *analysis_output.OutputManager) {
-	fmt.Println("Not Implemented")
+func (s SqlInjection) Run(files *[]fs.File, outputManager *analysis_output.OutputManager) {
+
 }
