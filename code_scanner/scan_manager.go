@@ -2,12 +2,13 @@ package code_scanner
 
 import (
 	"fmt"
+	"io/fs"
 	"sync"
 )
 
 type CodeScanner interface {
 	GetName() string
-	Run() error
+	Run()
 }
 
 type DefaultCodeScanner struct {
@@ -23,9 +24,6 @@ type ScanManager struct {
 }
 
 func (manager *ScanManager) AddScan(scan *CodeScanner) {
-	lock := &sync.Mutex{}
-	lock.Lock()
-	defer lock.Unlock()
 	manager.scanners = append(manager.scanners, *scan)
 }
 
@@ -33,7 +31,8 @@ func (manager *ScanManager) GetScanners() []CodeScanner {
 	return manager.scanners
 }
 
-func (manager *ScanManager) RunScanners() {
+func (manager *ScanManager) RunScanners(files *[]fs.FileInfo) {
+
 	wg := sync.WaitGroup{}
 	for _, codeScanner := range manager.GetScanners() {
 		wg.Add(1)

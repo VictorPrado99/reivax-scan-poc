@@ -16,9 +16,10 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	// "bufio"
 
-	StaticScan "github.com/VictorPrado99/reivax-scan-poc/code_scanner"
+	"github.com/VictorPrado99/reivax-scan-poc/code_scanner"
+	"github.com/VictorPrado99/reivax-scan-poc/util"
 	"github.com/spf13/cobra"
 )
 
@@ -26,13 +27,26 @@ import (
 var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan your file for static vulnerabilities",
-	Long:  `Scan you files looking for static vulnerabilities.`,
+	Long:  `Scan your files looking for static vulnerabilities.`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("scan called")
-		scanManager := StaticScan.GetInstance()
+		directory := args[0]
+		scanManager := code_scanner.GetInstance()
 
-		scanManager.RunScanners()
+		util.CheckDirectory(directory, true)
+
+		libRegEx := util.BuildRegexFilterByExtension("PASS EXTENSION ON FLAGS")
+
+		files := util.GetFiles(directory, libRegEx)
+
+		scanManager.RunScanners(files)
+
+		// if err != nil {
+		// 	fmt.Println("Not a directory")
+		// } else {
+		// 	fmt.Println(files)
+		// 	scanManager.RunScanners()
+		// }
 	},
 }
 

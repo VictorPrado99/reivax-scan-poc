@@ -23,7 +23,6 @@ type CrossSiteScripting struct {
 	DefaultCodeScanner
 }
 
-func (c CrossSiteScripting) Run() error {
+func (c CrossSiteScripting) Run() {
 	fmt.Println("Not Implemented")
-	return nil
 }

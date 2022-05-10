@@ -23,7 +23,6 @@ type SensitiveDataExposure struct {
 	DefaultCodeScanner
 }
 
-func (s SensitiveDataExposure) Run() error {
+func (s SensitiveDataExposure) Run() {
 	fmt.Println("Not Implemented")
-	return nil
 }

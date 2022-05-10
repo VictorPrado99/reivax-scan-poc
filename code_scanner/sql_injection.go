@@ -23,7 +23,6 @@ type SqlInjection struct {
 	DefaultCodeScanner
 }
 
-func (s SqlInjection) Run() error {
+func (s SqlInjection) Run() {
 	fmt.Println("Not Implemented")
-	return nil
 }
