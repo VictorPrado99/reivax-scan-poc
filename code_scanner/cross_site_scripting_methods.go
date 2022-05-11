@@ -33,8 +33,8 @@ func init() {
 func (c *CrossSiteScriptingAnalysisMethod) Analyse(fileContent []string, path string, scannerName string) []analysis_output.StaticAnalysisOutput {
 	var listAnalysisFile []analysis_output.StaticAnalysisOutput
 
+	log.Println("Validating file ", path)
 	for lineCounter, line := range fileContent {
-		log.Println("Validating file ", path)
 		if c.libRegEx.MatchString(line) {
 			analysisOutput := &analysis_output.DefaultStaticAnalysisOutput{
 				scannerName,

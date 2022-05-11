@@ -35,6 +35,7 @@ func (c *CrossSiteScripting) Run(files *[]util.FileWrapper, outputManager *analy
 	var listAnalysisOutput []analysis_output.StaticAnalysisOutput
 
 	for _, file := range *files {
+		println("cross_site_scripting.go ", "reading", file.GetPath())
 		for _, analyseMethod := range GetAnalysisMethods(c.ScannerId, file.GetExtension()) {
 			if analyseMethod != nil {
 				listAnalysisOutput = append(listAnalysisOutput, analyseMethod.Analyse(file.GetFileContent(), file.GetPath(), c.ScannerName)...)

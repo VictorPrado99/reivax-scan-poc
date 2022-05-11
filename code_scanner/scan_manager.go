@@ -54,6 +54,7 @@ func (manager *ScanManager) RunScanners(files *[]util.FileWrapper) *analysis_out
 
 	wg := sync.WaitGroup{}
 	for _, codeScanner := range manager.GetScanners() {
+		println("Running", "scanner", codeScanner.GetScannerId())
 		codeScanner.Run(files, &outputManager)
 		// wg.Add(1)
 		// go func(codeScanner CodeScanner) {

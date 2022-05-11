@@ -70,6 +70,7 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
 				path,
 				extension,
 			}
+
 			fileList = append(fileList, &fileWrapper)
 		}
 
