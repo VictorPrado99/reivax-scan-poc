@@ -55,18 +55,18 @@ func (o *OutputManager) AddAnalysedDataGroup(analysedDataGroup []StaticAnalysisO
 }
 
 func (o *OutputManager) GenerateOutput(outputTypes ...string) {
-	// wg := sync.WaitGroup{}
+	wg := sync.WaitGroup{}
 	for _, outputType := range outputTypes {
-		// wg.Add(1)
-		// go func() {
-		// defer wg.Done()
-		GetOutputType(outputType).GenerateOutput(o.analysedData)
-		// }()
+		wg.Add(1)
+		go func(outputType string) {
+			defer wg.Done()
+			GetOutputType(outputType).GenerateOutput(o.analysedData)
+		}(outputType)
 	}
-
-	// wg.Wait()
 
 	if len(outputsTypes) == 0 {
 		GetOutputType(DefaultOutputFormatType).GenerateOutput(o.analysedData)
 	}
+
+	wg.Wait()
 }
