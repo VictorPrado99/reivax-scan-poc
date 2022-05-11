@@ -1,7 +1,6 @@
 package util
 
 import (
-	"bufio"
 	"errors"
 	"io/fs"
 	"log"
@@ -9,18 +8,21 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 )
 
 type FileWrapper interface {
 	GetFileContent() []string
 	GetFileInfo() fs.FileInfo
 	GetPath() string
+	GetExtension() string
 }
 
 type DefaultFileWrapper struct {
 	FileContent []string
 	FileInfo    fs.FileInfo
 	Path        string
+	Extension   string
 }
 
 func (w *DefaultFileWrapper) GetFileContent() []string {
@@ -33,6 +35,10 @@ func (w *DefaultFileWrapper) GetFileInfo() fs.FileInfo {
 
 func (w *DefaultFileWrapper) GetPath() string {
 	return w.Path
+}
+
+func (w *DefaultFileWrapper) GetExtension() string {
+	return w.Extension
 }
 
 func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
@@ -56,10 +62,13 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
 
 			textFiles := GetFileContent(absPath)
 
+			extension := strings.Replace(filepath.Ext(path), `.`, ``, 1)
+
 			fileWrapper := DefaultFileWrapper{
 				textFiles,
 				info,
 				path,
+				extension,
 			}
 			fileList = append(fileList, &fileWrapper)
 		}
@@ -76,29 +85,38 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
 }
 
 func GetFileContent(absPath string) []string {
-	file, err := os.Open(absPath)
-	defer func() {
-		err := file.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
 
-	if err == nil {
-		log.Fatal("Couldn't read ", absPath, err)
+	return []string{
+		"dsadas",
+		"dsadas",
+		"dsadsafgdczx",
+		"czxczxcw Alert()",
+		"ssadasalert()dasdasdas%",
 	}
 
-	scanner := bufio.NewScanner(file)
+	// file, err := os.Open(absPath)
+	// defer func() {
+	// 	err := file.Close()
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// }()
 
-	scanner.Split(bufio.ScanLines)
+	// if err == nil {
+	// 	log.Fatal("Couldn't read ", absPath, err)
+	// }
 
-	var text []string
+	// scanner := bufio.NewScanner(file)
 
-	for scanner.Scan() {
-		text = append(text, scanner.Text())
-	}
+	// scanner.Split(bufio.ScanLines)
 
-	return text
+	// var text []string
+
+	// for scanner.Scan() {
+	// 	text = append(text, scanner.Text())
+	// }
+
+	// return text
 }
 
 func BuildRegexFilterByExtension(arguments ...string) *regexp.Regexp {

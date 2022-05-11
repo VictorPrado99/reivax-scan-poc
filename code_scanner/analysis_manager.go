@@ -2,7 +2,6 @@ package code_scanner
 
 import (
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
-	"github.com/VictorPrado99/reivax-scan-poc/util"
 )
 
 func GetAnalysisMethods(codeScannerId string, fileExtensions ...string) []AnalysisMethod {
@@ -11,7 +10,7 @@ func GetAnalysisMethods(codeScannerId string, fileExtensions ...string) []Analys
 	for _, fileExtension := range fileExtensions {
 		key := BuildKey(codeScannerId, fileExtension)
 		analysisMethod := getAnalysisMethod(key)
-		if !util.ContainTypeInList(analysisMethod, &analysisMethodsList) {
+		if analysisMethod != nil {
 			analysisMethodsList = append(analysisMethodsList, analysisMethod)
 		}
 	}
@@ -20,9 +19,7 @@ func GetAnalysisMethods(codeScannerId string, fileExtensions ...string) []Analys
 		for _, fileExtension := range GetInstance().GetScanner(codeScannerId).GetDefaultExtensionsTypes() {
 			key := BuildKey(codeScannerId, fileExtension)
 			analysisMethod := getAnalysisMethod(key)
-			if !util.ContainTypeInList(analysisMethod, &analysisMethodsList) {
-				analysisMethodsList = append(analysisMethodsList, analysisMethod)
-			}
+			analysisMethodsList = append(analysisMethodsList, analysisMethod)
 		}
 	}
 

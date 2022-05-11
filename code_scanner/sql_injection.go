@@ -32,7 +32,5 @@ type SqlInjection struct {
 }
 
 func (s SqlInjection) Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager) {
-	for _, file := range *files {
-		println("[SQL INJECTION] " + file.GetFileInfo().Name())
-	}
+
 }

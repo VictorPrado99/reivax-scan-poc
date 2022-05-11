@@ -14,7 +14,7 @@ func (o *JsonAnalysisOutput) GenerateOutput(outputData []StaticAnalysisOutput, w
 	if wg != nil {
 		defer wg.Done()
 	}
-	println(o.GetOutputType() + " generate")
+	// println(o.GetOutputType() + " generate")
 }
 
 func init() {

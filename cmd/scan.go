@@ -18,6 +18,8 @@ package cmd
 import (
 	// "bufio"
 
+	"log"
+
 	"github.com/VictorPrado99/reivax-scan-poc/code_scanner"
 	"github.com/VictorPrado99/reivax-scan-poc/util"
 	"github.com/spf13/cobra"
@@ -38,6 +40,8 @@ var scanCmd = &cobra.Command{
 		libRegEx := util.BuildRegexFilterByExtension()
 
 		files := util.GetFiles(directory, libRegEx)
+
+		log.Println("scan.go - files - ", files)
 
 		outputManager := scanManager.RunScanners(files)
 

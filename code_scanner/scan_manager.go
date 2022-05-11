@@ -1,7 +1,6 @@
 package code_scanner
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
@@ -55,12 +54,13 @@ func (manager *ScanManager) RunScanners(files *[]util.FileWrapper) *analysis_out
 
 	wg := sync.WaitGroup{}
 	for _, codeScanner := range manager.GetScanners() {
-		wg.Add(1)
-		fmt.Println("Running " + codeScanner.GetName())
 		codeScanner.Run(files, &outputManager)
-		go func(codeScanner CodeScanner) {
-			defer wg.Done()
-		}(codeScanner)
+		// wg.Add(1)
+		// go func(codeScanner CodeScanner) {
+		// 	fmt.Println("Running " + codeScanner.GetName())
+		// 	codeScanner.Run(files, &outputManager)
+		// 	defer wg.Done()
+		// }(codeScanner)
 	}
 	wg.Wait()
 	return &outputManager

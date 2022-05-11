@@ -1,7 +1,6 @@
 package analysis_output
 
 import (
-	"log"
 	"sync"
 )
 
@@ -17,8 +16,6 @@ func (o *PlainTextAnalysisOutput) GenerateOutput(outputDatas []StaticAnalysisOut
 	if wg != nil {
 		defer wg.Done()
 	}
-
-	log.Println(outputDatas)
 
 	for _, outputData := range outputDatas {
 		println("[", outputData.GetScanType(), `] in file "`, outputData.GetFilePath(), `" on line `, outputData.GetFileLine())
