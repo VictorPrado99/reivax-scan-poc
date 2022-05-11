@@ -9,8 +9,32 @@ import (
 	"regexp"
 )
 
-func GetFiles(directory string, libRegEx *regexp.Regexp) *[]fs.File {
-	var fileList []fs.File
+type FileWrapper interface {
+	GetFile() fs.File
+	GetFileInfo() fs.FileInfo
+	GetPath() string
+}
+
+type DefaultFileWrapper struct {
+	File     fs.File
+	FileInfo fs.FileInfo
+	Path     string
+}
+
+func (w *DefaultFileWrapper) GetFile() fs.File {
+	return w.File
+}
+
+func (w *DefaultFileWrapper) GetFileInfo() fs.FileInfo {
+	return w.FileInfo
+}
+
+func (w *DefaultFileWrapper) GetPath() string {
+	return w.Path
+}
+
+func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
+	var fileList []FileWrapper
 
 	errWalk := filepath.Walk(directory, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -24,8 +48,15 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]fs.File {
 		if libRegEx.MatchString(info.Name()) {
 			file, openError := os.Open(directory + path)
 			if openError != nil {
-				fileList = append(fileList, file)
+				defer file.Close()
+				fileWrapper := DefaultFileWrapper{
+					file,
+					info,
+					path,
+				}
+				fileList = append(fileList, &fileWrapper)
 			} else {
+				log.Println("Coudn't open the File")
 				log.Fatal(openError)
 			}
 		}
@@ -34,6 +65,7 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]fs.File {
 	})
 
 	if errWalk != nil {
+		log.Println("Couldn't Walk")
 		log.Fatal(errWalk)
 	}
 

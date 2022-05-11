@@ -1,19 +1,19 @@
 package analysis_output
 
 type DefaultStaticAnalysisOutput struct {
-	scanType string
-	filePath string
-	fileLine int
+	ScanType string
+	FilePath string
+	FileLine int
 }
 
 func (d *DefaultStaticAnalysisOutput) GetScanType() string {
-	return d.scanType
+	return d.ScanType
 }
 
 func (d *DefaultStaticAnalysisOutput) GetFilePath() string {
-	return d.filePath
+	return d.FilePath
 }
 
 func (d *DefaultStaticAnalysisOutput) GetFileLine() int {
-	return d.fileLine
+	return d.FileLine
 }

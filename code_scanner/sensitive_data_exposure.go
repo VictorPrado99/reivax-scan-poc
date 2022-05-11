@@ -1,9 +1,8 @@
 package code_scanner
 
 import (
-	"io/fs"
-
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
+	"github.com/VictorPrado99/reivax-scan-poc/util"
 )
 
 const (
@@ -25,6 +24,6 @@ type SensitiveDataExposure struct {
 	DefaultCodeScanner
 }
 
-func (s SensitiveDataExposure) Run(files *[]fs.File, outputManager *analysis_output.OutputManager) {
+func (s SensitiveDataExposure) Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager) {
 
 }

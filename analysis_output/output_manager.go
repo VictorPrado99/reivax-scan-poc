@@ -9,7 +9,7 @@ const (
 )
 
 type OutputFormatInterface interface {
-	GenerateOutput()
+	GenerateOutput(outputData []StaticAnalysisOutput, wg *sync.WaitGroup)
 	GetOutputType() string
 }
 
@@ -54,11 +54,15 @@ func (o *OutputManager) AddAnalysedDataGroup(analysedDataGroup []StaticAnalysisO
 }
 
 func (o *OutputManager) GenerateOutput(outputTypes ...string) {
+	wg := sync.WaitGroup{}
 	for _, outputType := range outputTypes {
-		GetOutputType(outputType).GenerateOutput()
+		wg.Add(1)
+		go GetOutputType(outputType).GenerateOutput(o.analysedData, &wg)
 	}
 
+	wg.Wait()
+
 	if len(outputsTypes) == 0 {
-		GetOutputType(DefaultOutputFormatType).GenerateOutput()
+		GetOutputType(DefaultOutputFormatType).GenerateOutput(o.analysedData, nil)
 	}
 }

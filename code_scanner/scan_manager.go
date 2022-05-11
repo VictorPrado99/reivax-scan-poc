@@ -2,15 +2,15 @@ package code_scanner
 
 import (
 	"fmt"
-	"io/fs"
 	"sync"
 
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
+	"github.com/VictorPrado99/reivax-scan-poc/util"
 )
 
 type CodeScanner interface {
 	GetName() string
-	Run(files *[]fs.File, outputManager *analysis_output.OutputManager)
+	Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager)
 }
 
 type DefaultCodeScanner struct {
@@ -33,7 +33,7 @@ func (manager *ScanManager) GetScanners() []CodeScanner {
 	return manager.scanners
 }
 
-func (manager *ScanManager) RunScanners(files *[]fs.File) *analysis_output.OutputManager {
+func (manager *ScanManager) RunScanners(files *[]util.FileWrapper) *analysis_output.OutputManager {
 	outputManager := analysis_output.OutputManager{}
 
 	wg := sync.WaitGroup{}
