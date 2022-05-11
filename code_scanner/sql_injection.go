@@ -11,9 +11,16 @@ const (
 
 func init() {
 	var sInjectionScanner CodeScanner
+
+	scannerId := "SqlInjection"
+
+	defaultExtensionsTypes := []string{"go", "js", "html"}
+
 	sInjectionScanner = &SqlInjection{
 		DefaultCodeScanner{
 			SqlInjectionName,
+			defaultExtensionsTypes,
+			scannerId,
 		},
 	}
 
@@ -25,7 +32,7 @@ type SqlInjection struct {
 }
 
 func (s SqlInjection) Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager) {
-	// for _, file := range *files {
-	// 	println("[SQL INJECTION] " + file.GetFileInfo().Name())
-	// }
+	for _, file := range *files {
+		println("[SQL INJECTION] " + file.GetFileInfo().Name())
+	}
 }

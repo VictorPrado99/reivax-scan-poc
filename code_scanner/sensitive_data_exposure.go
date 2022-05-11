@@ -11,9 +11,15 @@ const (
 
 func init() {
 	var codeScanner CodeScanner
+	scannerId := "SensDataExp"
+
+	defaultExtensionsTypes := []string{"go", "js", "html"}
+
 	codeScanner = &SensitiveDataExposure{
 		DefaultCodeScanner{
 			SensitiveDataExposureName,
+			defaultExtensionsTypes,
+			scannerId,
 		},
 	}
 

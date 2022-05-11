@@ -39,6 +39,7 @@ type StaticAnalysisOutput interface {
 	GetScanType() string
 	GetFilePath() string
 	GetFileLine() int
+	GetLineContent() string
 }
 
 type OutputManager struct {

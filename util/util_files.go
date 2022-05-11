@@ -1,28 +1,30 @@
 package util
 
 import (
+	"bufio"
 	"errors"
 	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 )
 
 type FileWrapper interface {
-	GetFile() fs.File
+	GetFileContent() []string
 	GetFileInfo() fs.FileInfo
 	GetPath() string
 }
 
 type DefaultFileWrapper struct {
-	File     fs.File
-	FileInfo fs.FileInfo
-	Path     string
+	FileContent []string
+	FileInfo    fs.FileInfo
+	Path        string
 }
 
-func (w *DefaultFileWrapper) GetFile() fs.File {
-	return w.File
+func (w *DefaultFileWrapper) GetFileContent() []string {
+	return w.FileContent
 }
 
 func (w *DefaultFileWrapper) GetFileInfo() fs.FileInfo {
@@ -46,19 +48,20 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
 		}
 
 		if libRegEx.MatchString(info.Name()) {
-			file, openError := os.Open(directory + path)
-			if openError != nil {
-				defer file.Close()
-				fileWrapper := DefaultFileWrapper{
-					file,
-					info,
-					path,
-				}
-				fileList = append(fileList, &fileWrapper)
-			} else {
-				log.Println("Coudn't open the File")
-				log.Fatal(openError)
+			absPath, err := filepath.Abs(path)
+
+			if err != nil {
+				log.Println("Abs path error ", err)
 			}
+
+			textFiles := GetFileContent(absPath)
+
+			fileWrapper := DefaultFileWrapper{
+				textFiles,
+				info,
+				path,
+			}
+			fileList = append(fileList, &fileWrapper)
 		}
 
 		return nil
@@ -72,9 +75,50 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
 	return &fileList
 }
 
-func BuildRegexFilterByExtension(argument string) *regexp.Regexp {
-	//TODO: Implement auto regex build by extension passed in argument
-	libRegEx, errRegex := regexp.Compile(`^.*\.(go|java|py|html|js|ts|kt)$`)
+func GetFileContent(absPath string) []string {
+	file, err := os.Open(absPath)
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	if err == nil {
+		log.Fatal("Couldn't read ", absPath, err)
+	}
+
+	scanner := bufio.NewScanner(file)
+
+	scanner.Split(bufio.ScanLines)
+
+	var text []string
+
+	for scanner.Scan() {
+		text = append(text, scanner.Text())
+	}
+
+	return text
+}
+
+func BuildRegexFilterByExtension(arguments ...string) *regexp.Regexp {
+	var extensionRegex string
+
+	if len(arguments) == 0 {
+		extensionRegex = "go|html|js"
+	}
+
+	for _, extension := range arguments {
+		if len(extensionRegex) == 0 {
+			extensionRegex = extensionRegex + extension
+		} else {
+			extensionRegex = extensionRegex + "|" + extension
+		}
+	}
+
+	extensionRegex = `^.*\.(` + extensionRegex + `)$`
+
+	libRegEx, errRegex := regexp.Compile(extensionRegex)
 
 	if errRegex != nil {
 		log.Fatal(errRegex)
@@ -99,4 +143,13 @@ func CheckDirectory(directory string, closeOnFailure bool) error {
 	}
 
 	return errDir
+}
+
+func ContainTypeInList[T any](value T, list *[]T) bool {
+	for _, valueAlready := range *list {
+		if reflect.TypeOf(valueAlready) == reflect.TypeOf(value) {
+			return true
+		}
+	}
+	return false
 }

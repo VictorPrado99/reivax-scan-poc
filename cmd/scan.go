@@ -35,7 +35,7 @@ var scanCmd = &cobra.Command{
 
 		util.CheckDirectory(directory, true)
 
-		libRegEx := util.BuildRegexFilterByExtension("PASS EXTENSION ON FLAGS")
+		libRegEx := util.BuildRegexFilterByExtension()
 
 		files := util.GetFiles(directory, libRegEx)
 
