@@ -1,7 +1,9 @@
 package analysis_output
 
 import (
-	"sync"
+	"strconv"
+
+	"github.com/VictorPrado99/reivax-scan-poc/util"
 )
 
 const (
@@ -12,14 +14,14 @@ type PlainTextAnalysisOutput struct {
 	DefaultOutputFormat
 }
 
-func (o *PlainTextAnalysisOutput) GenerateOutput(outputDatas []StaticAnalysisOutput, wg *sync.WaitGroup) {
-	// if wg != nil {
-	// 	defer wg.Done()
-	// }
+func (o *PlainTextAnalysisOutput) GenerateOutput(outputDatas []StaticAnalysisOutput) {
+	var lines []string
+	for _, outputData := range outputDatas {
+		line := "[" + outputData.GetScanType() + `] in file "` + outputData.GetFilePath() + `" on line ` + strconv.Itoa(outputData.GetFileLine())
+		lines = append(lines, line)
+	}
 
-	// for _, outputData := range outputDatas {
-	// 	println("[", outputData.GetScanType(), `] in file "`, outputData.GetFilePath(), `" on line `, outputData.GetFileLine())
-	// }
+	util.WriteFile(lines, "Statis Analysis.txt")
 }
 
 func init() {

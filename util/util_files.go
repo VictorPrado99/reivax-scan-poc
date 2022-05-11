@@ -3,6 +3,7 @@ package util
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -163,4 +164,30 @@ func ContainTypeInList[T any](value T, list *[]T) bool {
 		}
 	}
 	return false
+}
+
+func WriteFile(lines []string, title string) {
+	f, err := os.Create(title)
+	if err != nil {
+		log.Println(err)
+		f.Close()
+		return
+	}
+
+	for _, v := range lines {
+		fmt.Fprintln(f, v)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
+
+	errClose := f.Close()
+
+	if errClose != nil {
+		fmt.Println(errClose)
+		return
+	}
+	fmt.Println("File written successfully")
+
 }

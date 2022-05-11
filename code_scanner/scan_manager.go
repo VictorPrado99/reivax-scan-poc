@@ -32,6 +32,20 @@ func (dcs *DefaultCodeScanner) GetDefaultExtensionsTypes() []string {
 	return dcs.DefaultExtensionsTypes
 }
 
+func (c *DefaultCodeScanner) Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager) {
+	var listAnalysisOutput []analysis_output.StaticAnalysisOutput
+
+	for _, file := range *files {
+		for _, analyseMethod := range GetAnalysisMethods(c.ScannerId, file.GetExtension()) {
+			if analyseMethod != nil {
+				listAnalysisOutput = append(listAnalysisOutput, analyseMethod.Analyse(file.GetFileContent(), file.GetPath(), c.ScannerName)...)
+			}
+		}
+	}
+
+	outputManager.AddAnalysedDataGroup(listAnalysisOutput)
+}
+
 type ScanManager struct {
 	scanners           []CodeScanner
 	scannersDictionary map[string]CodeScanner

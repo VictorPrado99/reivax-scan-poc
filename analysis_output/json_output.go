@@ -1,7 +1,5 @@
 package analysis_output
 
-import "sync"
-
 const (
 	jsonType = "json"
 )
@@ -10,10 +8,7 @@ type JsonAnalysisOutput struct {
 	DefaultOutputFormat
 }
 
-func (o *JsonAnalysisOutput) GenerateOutput(outputData []StaticAnalysisOutput, wg *sync.WaitGroup) {
-	if wg != nil {
-		defer wg.Done()
-	}
+func (o *JsonAnalysisOutput) GenerateOutput(outputData []StaticAnalysisOutput) {
 	// println(o.GetOutputType() + " generate")
 }
 
