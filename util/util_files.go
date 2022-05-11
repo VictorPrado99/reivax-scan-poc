@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bufio"
 	"errors"
 	"io/fs"
 	"log"
@@ -86,38 +87,29 @@ func GetFiles(directory string, libRegEx *regexp.Regexp) *[]FileWrapper {
 }
 
 func GetFileContent(absPath string) []string {
+	file, err := os.Open(absPath)
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
-	return []string{
-		"dsadas",
-		"dsadas",
-		"dsadsafgdczx",
-		"czxczxcw Alert()",
-		"ssadasalert()dasdasdas%",
+	if err != nil {
+		log.Fatal("Couldn't read ", absPath, err)
 	}
 
-	// file, err := os.Open(absPath)
-	// defer func() {
-	// 	err := file.Close()
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// }()
+	scanner := bufio.NewScanner(file)
 
-	// if err == nil {
-	// 	log.Fatal("Couldn't read ", absPath, err)
-	// }
+	scanner.Split(bufio.ScanLines)
 
-	// scanner := bufio.NewScanner(file)
+	var text []string
 
-	// scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		text = append(text, scanner.Text())
+	}
 
-	// var text []string
-
-	// for scanner.Scan() {
-	// 	text = append(text, scanner.Text())
-	// }
-
-	// return text
+	return text
 }
 
 func BuildRegexFilterByExtension(arguments ...string) *regexp.Regexp {
