@@ -188,6 +188,4 @@ func WriteFile(lines []string, title string) {
 		fmt.Println(errClose)
 		return
 	}
-	fmt.Println("File written successfully")
-
 }

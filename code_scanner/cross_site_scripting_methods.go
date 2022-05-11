@@ -1,7 +1,6 @@
 package code_scanner
 
 import (
-	"log"
 	"regexp"
 
 	"github.com/VictorPrado99/reivax-scan-poc/analysis_output"
@@ -33,7 +32,6 @@ func init() {
 func (c *CrossSiteScriptingAnalysisMethod) Analyse(fileContent []string, path string, scannerName string) []analysis_output.StaticAnalysisOutput {
 	var listAnalysisFile []analysis_output.StaticAnalysisOutput
 
-	log.Println("Validating file ", path)
 	for lineCounter, line := range fileContent {
 		if c.libRegEx.MatchString(line) {
 			analysisOutput := &analysis_output.DefaultStaticAnalysisOutput{

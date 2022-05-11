@@ -9,7 +9,7 @@ import (
 
 type CodeScanner interface {
 	GetName() string
-	Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager)
+	Run(files []util.FileWrapper, outputManager *analysis_output.OutputManager)
 	GetDefaultExtensionsTypes() []string
 	GetScannerId() string
 }
@@ -32,10 +32,10 @@ func (dcs *DefaultCodeScanner) GetDefaultExtensionsTypes() []string {
 	return dcs.DefaultExtensionsTypes
 }
 
-func (c *DefaultCodeScanner) Run(files *[]util.FileWrapper, outputManager *analysis_output.OutputManager) {
+func (c *DefaultCodeScanner) Run(files []util.FileWrapper, outputManager *analysis_output.OutputManager) {
 	var listAnalysisOutput []analysis_output.StaticAnalysisOutput
 
-	for _, file := range *files {
+	for _, file := range files {
 		for _, analyseMethod := range GetAnalysisMethods(c.ScannerId, file.GetExtension()) {
 			if analyseMethod != nil {
 				listAnalysisOutput = append(listAnalysisOutput, analyseMethod.Analyse(file.GetFileContent(), file.GetPath(), c.ScannerName)...)
@@ -63,19 +63,24 @@ func (manager *ScanManager) GetScanner(scannerId string) CodeScanner {
 	return manager.scannersDictionary[scannerId]
 }
 
-func (manager *ScanManager) RunScanners(files *[]util.FileWrapper) *analysis_output.OutputManager {
+func (manager *ScanManager) RunScanners(files []util.FileWrapper) *analysis_output.OutputManager {
 	outputManager := analysis_output.OutputManager{}
+	size := 5
 
 	wg := sync.WaitGroup{}
 	for _, codeScanner := range manager.GetScanners() {
-		println("Running", "scanner", codeScanner.GetScannerId())
-		codeScanner.Run(files, &outputManager)
-		// wg.Add(1)
-		// go func(codeScanner CodeScanner) {
-		// 	fmt.Println("Running " + codeScanner.GetName())
-		// 	codeScanner.Run(files, &outputManager)
-		// 	defer wg.Done()
-		// }(codeScanner)
+		var j int
+		for i := 0; i < len(files); i += size {
+			j += size
+			if j > len(files) {
+				j = len(files)
+			}
+			wg.Add(1)
+			go func(codeScanner CodeScanner, i int, j int) {
+				defer wg.Done()
+				codeScanner.Run(files[i:j], &outputManager)
+			}(codeScanner, i, j)
+		}
 	}
 	wg.Wait()
 	return &outputManager

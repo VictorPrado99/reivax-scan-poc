@@ -1,6 +1,7 @@
 package analysis_output
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -54,19 +55,27 @@ func (o *OutputManager) AddAnalysedDataGroup(analysedDataGroup []StaticAnalysisO
 	o.analysedData = append(o.analysedData, analysedDataGroup...)
 }
 
+func (o *OutputManager) HasDataToOutput() bool {
+	return len(o.analysedData) > 0
+}
+
 func (o *OutputManager) GenerateOutput(outputTypes ...string) {
-	wg := sync.WaitGroup{}
-	for _, outputType := range outputTypes {
-		wg.Add(1)
-		go func(outputType string) {
-			defer wg.Done()
-			GetOutputType(outputType).GenerateOutput(o.analysedData)
-		}(outputType)
-	}
+	if o.HasDataToOutput() {
+		wg := sync.WaitGroup{}
+		for _, outputType := range outputTypes {
+			wg.Add(1)
+			go func(outputType string) {
+				defer wg.Done()
+				GetOutputType(outputType).GenerateOutput(o.analysedData)
+			}(outputType)
+		}
 
-	if len(outputsTypes) == 0 {
-		GetOutputType(DefaultOutputFormatType).GenerateOutput(o.analysedData)
-	}
+		if len(outputsTypes) == 0 {
+			GetOutputType(DefaultOutputFormatType).GenerateOutput(o.analysedData)
+		}
 
-	wg.Wait()
+		wg.Wait()
+	} else {
+		fmt.Println("Wasn't possible to detect anything")
+	}
 }
