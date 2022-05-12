@@ -35,18 +35,17 @@ var scanCmd = &cobra.Command{
 
 		util.CheckDirectory(directory, true)
 
-		// extension, err := cmd.Flags().GetStringSlice("extension")
-		// println("Extension = ", err)
-		// outputFormat, err := cmd.Flags().GetStringSlice("output")
-		// println("output format = ", err)
+		extension, _ := cmd.Flags().GetStringSlice("extension")
 
-		libRegEx := util.BuildRegexFilterByExtension()
+		output, _ := cmd.Flags().GetStringSlice("output")
+
+		libRegEx := util.BuildRegexFilterByExtension(extension...)
 
 		files := util.GetFiles(directory, libRegEx)
 
 		outputManager := scanManager.RunScanners(*files)
 
-		outputManager.GenerateOutput()
+		outputManager.GenerateOutput(output...)
 	},
 }
 

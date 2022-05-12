@@ -2,6 +2,7 @@ package analysis_output
 
 import (
 	"fmt"
+	"log"
 	"sync"
 )
 
@@ -33,6 +34,10 @@ func AddOutputType(outputType OutputFormatInterface) {
 }
 
 func GetOutputType(outputType string) OutputFormatInterface {
+	value := outputsTypes[outputType]
+	if value == nil {
+		log.Fatal("Output doesn't exist")
+	}
 	return outputsTypes[outputType]
 }
 
