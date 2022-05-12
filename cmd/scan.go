@@ -35,18 +35,26 @@ var scanCmd = &cobra.Command{
 
 		util.CheckDirectory(directory, true)
 
+		// extension, err := cmd.Flags().GetStringSlice("extension")
+		// println("Extension = ", err)
+		// outputFormat, err := cmd.Flags().GetStringSlice("output")
+		// println("output format = ", err)
+
 		libRegEx := util.BuildRegexFilterByExtension()
 
 		files := util.GetFiles(directory, libRegEx)
 
 		outputManager := scanManager.RunScanners(*files)
 
-		outputManager.GenerateOutput("json", "plain")
+		outputManager.GenerateOutput()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(scanCmd)
+
+	scanCmd.Flags().StringSliceP("extension", "e", []string{"js", "html", "go"}, `Set extensions you wanna scan for. Don't use .  e.g. [-e=".js,.go"] use instead [-e="js,go"]`)
+	scanCmd.Flags().StringSliceP("output", "o", []string{"json, plain"}, `Set extensions you wanna scan for. Usage [-o="json, plain"]`)
 
 	// scanCmd.Flags()
 
