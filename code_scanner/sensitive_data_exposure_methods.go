@@ -12,9 +12,9 @@ type SensitiveDataExposureAnalysisMethod struct {
 }
 
 func NewSensitiveDataExposureAnalysisMethod() *SensitiveDataExposureAnalysisMethod {
-	scannerId := "CrossSiteScript"
+	scannerId := "SensDataExp"
 	supportedExtensionsTypes := []string{"go", "js", "java", "kt"}
-	dataExposureRegex := regexp.MustCompile(`(?m)(?i) .*(Checkmarx|Hellman & Friedman| \$1.15b).*(Checkmarx|Hellman & Friedman| \$1.15b).*(Checkmarx|Hellman & Friedman| \$1.15b)`)
+	dataExposureRegex := regexp.MustCompile(`(?m)(?i)^.*(Checkmarx|Hellman & Friedman| \$1.15b).*(Checkmarx|Hellman & Friedman| \$1.15b).*(Checkmarx|Hellman & Friedman| \$1.15b)`)
 
 	return &SensitiveDataExposureAnalysisMethod{
 		DefaultAnalysisMethod{
@@ -26,13 +26,11 @@ func NewSensitiveDataExposureAnalysisMethod() *SensitiveDataExposureAnalysisMeth
 }
 
 func init() {
-	AddAnalysisMethod(NewCrossSiteScriptingAnalysisMethod())
+	AddAnalysisMethod(NewSensitiveDataExposureAnalysisMethod())
 }
 
 func (c *SensitiveDataExposureAnalysisMethod) Analyse(fileContent []string, path string, scannerName string) []analysis_output.StaticAnalysisOutput {
 	var listAnalysisFile []analysis_output.StaticAnalysisOutput
-
-	println("analysing file for sensitive data exposure", path)
 
 	for lineCounter, line := range fileContent {
 		if c.dataExposureRegex.MatchString(line) {

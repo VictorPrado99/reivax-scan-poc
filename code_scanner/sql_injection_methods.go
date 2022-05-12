@@ -12,10 +12,10 @@ type SqlInjectionAnalysisMethod struct {
 }
 
 func NewSqlInjectionAnalysisMethod() *SqlInjectionAnalysisMethod {
-	scannerId := "CrossSiteScript"
+	scannerId := "SqlInjection"
 	supportedExtensionsTypes := []string{"go"}
-	slRegex := regexp.MustCompile(`(?m)(?i)"SELECT\s+?[^\s]+?\s+?FROM\s+?[^\s]+?\s+?WHERE.*"$`)
-	// slRegex := regexp.MustCompile(`(?m)(?i)"SELECT\s+?[^\s]+?\s+?FROM\s+?[^\s]+?\s+?WHERE\s(%.|)"(.*|.*\+.*(\=|\:\=)".*")$`)
+	// slRegex := regexp.MustCompile(`(?m)(?i)"SELECT\s+?[^\s]+?\s+?FROM\s+?[^\s]+?\s+?WHERE.*"$`)
+	slRegex := regexp.MustCompile(`(?m)(?i)"SELECT\s+?[^\s]+?\s+?FROM\s+?[^\s]+?\s+?WHERE\s(%.|)"(.*|.*\+.*(\=|\:\=)".*")$`)
 
 	return &SqlInjectionAnalysisMethod{
 		DefaultAnalysisMethod{
@@ -27,7 +27,7 @@ func NewSqlInjectionAnalysisMethod() *SqlInjectionAnalysisMethod {
 }
 
 func init() {
-	AddAnalysisMethod(NewCrossSiteScriptingAnalysisMethod())
+	AddAnalysisMethod(NewSqlInjectionAnalysisMethod())
 }
 
 func (c *SqlInjectionAnalysisMethod) Analyse(fileContent []string, path string, scannerName string) []analysis_output.StaticAnalysisOutput {
@@ -36,6 +36,7 @@ func (c *SqlInjectionAnalysisMethod) Analyse(fileContent []string, path string, 
 	println("analysing file for sql injection", path)
 
 	for lineCounter, line := range fileContent {
+		println(line)
 		if c.slRegex.MatchString(line) {
 			analysisOutput := &analysis_output.DefaultStaticAnalysisOutput{
 				scannerName,
