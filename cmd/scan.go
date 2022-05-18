@@ -53,7 +53,7 @@ func init() {
 	rootCmd.AddCommand(scanCmd)
 
 	scanCmd.Flags().StringSliceP("extension", "e", []string{"js", "html", "go"}, `Set extensions you wanna scan for. Don't use .  e.g. [-e=".js,.go"] use instead [-e="js,go"]`)
-	scanCmd.Flags().StringSliceP("output", "o", []string{"json, plain"}, `Set extensions you wanna scan for. Usage [-o="json, plain"]`)
+	scanCmd.Flags().StringSliceP("output", "o", []string{"json", "plain"}, `Set extensions you wanna scan for. Usage [-o="json, plain"]`)
 
 	// scanCmd.Flags()
 
